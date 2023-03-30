@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             Int         @id @default(autoincrement()) @map("id")
+  departmentID   Departments @relation(fields: [department_id], references: [id])
+  department_id  Int         @map("department_id")
+  employee_names String      @map("employee_names")
+  identification_number String @unique @map("identification_number")
+  msisdn         String      @unique @map("msisdn")
+  refresh_token  String?      @map("refresh_token")
+  email          String      @unique @map("email")
+  password       String      @map("password")
+  status         Boolean     @map("status")
+
+  userCreate Users?   @relation("users2users")
+  creator    Users?   @relation("users2users", fields: [created_by], references: [id])
+  created_by Int?     @unique @map("created_by")
+  created_at DateTime @default(now()) @map("created_at")
+
+  userupdate Users?   @relation("users3users")
+  updator    Users?   @relation("users3users", fields: [updated_by], references: [id])
+  updated_by Int?     @unique @map("updated_by")
+  updated_at DateTime @updatedAt @map("updated_at")
+
+  @@map("il_users")
+}
+
+model Departments {
+  id              Int    @id @default(autoincrement()) @map("id")
+  department_name String @map("department_name")
+
+  users Users[]
+
+  @@map("il_departments")
+}
+
