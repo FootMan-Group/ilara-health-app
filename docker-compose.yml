@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  dev-db:
+    image: postgres:15.1
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ilaraHealthUser
+      POSTGRES_PASSWORD: 1lar@Nax3!>..
+      POSTGRES_DB: ilara_core
