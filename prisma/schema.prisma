@@ -44,3 +44,49 @@ model Departments {
   @@map("il_departments")
 }
 
+//Models below here
+model Customers {
+  id                    Int            @id @default(autoincrement()) @map("id")
+  identification_number String         @unique @map("identification_number")
+  customer_names        String         @map("customer_names")
+  msisdn                String         @unique @map("msisdn")
+  email                 String?        @unique @map("email")
+  password              String         @map("password")
+  refresh_token         String?        @map("refresh_token")
+  created_at            DateTime       @default(now()) @map("created_at")
+  updated_at            DateTime       @updatedAt @map("updated_at")
+
+  payments           Transactions[]
+
+  @@map("il_customers")
+}
+
+model Transaction_types {
+  id               Int    @id @default(autoincrement()) @map("id")
+  transaction_type String @map("transaction_type")
+
+  transactions Transactions[]
+
+  @@map("il_tranaction_types")
+}
+
+
+model Transactions {
+  id                    Int                @id @default(autoincrement()) @map("id")
+  customerID            Customers          @relation(fields: [customer_id], references: [id])
+  customer_id           Int                @map("customer_id")
+  transactionTypeID     Transaction_types? @relation(fields: [transaction_type_id], references: [id])
+  transaction_type_id   Int?               @map("transaction_type_id")
+  payment_ref           String             @map("payment_ref")
+  amount                Decimal            @map("amount")
+  transaction_timestamp DateTime           @map("transaction_timestamp")
+  status                Boolean            @map("status")
+  payer_name            String             @map("payer_name")
+  payer_number          String?            @map("payer_number")
+  source                String             @map("source")
+  created_at            DateTime           @default(now()) @map("created_at")
+  updated_at            DateTime           @updatedAt @map("updated_at")
+
+  @@map("il_transactions")
+}
+
