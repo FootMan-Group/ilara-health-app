@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { CustomersModule } from './customers/customers.module';
 import { ProductsModule } from './products/products.module';
 import { ServicesModule } from './services/services.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, CustomersModule, ProductsModule, ServicesModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, CustomersModule, ProductsModule, ServicesModule, TransactionsModule],
   controllers: [],
   providers: [],
 })
