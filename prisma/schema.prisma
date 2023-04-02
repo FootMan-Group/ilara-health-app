@@ -96,6 +96,7 @@ model Products {
   product           String  @map("product")
   status            Boolean @map("status")
   stock_count       Int     @map("stock_count")
+  price             Int?     @map("price")
 
   services Services[]
 
@@ -108,6 +109,7 @@ model Services {
   customer_id     Int           @map("customer_id")
   productID       Products      @relation(fields: [product_id], references: [id])
   product_id      Int           @map("product_id")
+  service_ref     String        @map("service_ref")
   units           Int           @map("units")
   total_cost      Int           @map("total_cost")
   balance         Int           @map("balance")
