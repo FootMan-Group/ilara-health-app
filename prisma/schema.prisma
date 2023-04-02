@@ -64,13 +64,12 @@ model Customers {
 
 model Transaction_types {
   id               Int    @id @default(autoincrement()) @map("id")
-  transaction_type String @map("transaction_type")
+  transaction_type String @unique @map("transaction_type")
 
   transactions Transactions[]
 
   @@map("il_tranaction_types")
 }
-
 
 model Transactions {
   id                    Int                @id @default(autoincrement()) @map("id")
@@ -78,7 +77,8 @@ model Transactions {
   customer_id           Int                @map("customer_id")
   transactionTypeID     Transaction_types? @relation(fields: [transaction_type_id], references: [id])
   transaction_type_id   Int?               @map("transaction_type_id")
-  payment_ref           String             @map("payment_ref")
+  payment_ref           String             @unique @map("payment_ref")
+  account_ref           String             @map("account_ref")
   amount                Decimal            @map("amount")
   transaction_timestamp DateTime           @map("transaction_timestamp")
   status                Boolean            @map("status")
@@ -87,16 +87,18 @@ model Transactions {
   source                String             @map("source")
   created_at            DateTime           @default(now()) @map("created_at")
   updated_at            DateTime           @updatedAt @map("updated_at")
+  serviceID             Services           @relation(fields: [service_id], references: [id])
+  service_id            Int                @map("service_id")
 
   @@map("il_transactions")
 }
 
 model Products {
   id                Int     @id @default(autoincrement()) @map("id")
-  product           String  @map("product")
+  product           String  @unique @map("product")
   status            Boolean @map("status")
   stock_count       Int     @map("stock_count")
-  price             Int?     @map("price")
+  price             Int?    @map("price")
 
   services Services[]
 
@@ -109,13 +111,15 @@ model Services {
   customer_id     Int           @map("customer_id")
   productID       Products      @relation(fields: [product_id], references: [id])
   product_id      Int           @map("product_id")
-  service_ref     String        @map("service_ref")
+  service_ref     String        @unique @map("service_ref")
   units           Int           @map("units")
   total_cost      Int           @map("total_cost")
   balance         Int           @map("balance")
   status          Boolean       @map("status")
   created_at      DateTime      @default(now()) @map("created_at")
   updated_at      DateTime      @updatedAt @map("updated_at")
+
+  payments        Transactions[]
 
   @@map("il_services")
 }

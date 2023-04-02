@@ -8,7 +8,7 @@ import { Services } from '.prisma/client';
 
 @Injectable()
 export class ServicesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async CreateService(
     customerId: number,
@@ -30,21 +30,31 @@ export class ServicesService {
       );
     }
 
+    if (product.stock_count < 1) {
+      throw new BadRequestException(
+        `Product with ID ${productId} is out of stock.`,
+      );
+    }
+
     const totalCost = product.price * units;
 
-    const service = await this.prisma.services.create({
-      data: {
-        customerID: { connect: { id: customerId } },
-        productID: { connect: { id: productId } },
-        units,
-        total_cost: totalCost,
-        balance: -totalCost,
-        service_ref: service_ref,
-        status: false,
-      },
-    });
+    try {
+      const service = await this.prisma.services.create({
+        data: {
+          customerID: { connect: { id: customerId } },
+          productID: { connect: { id: productId } },
+          units,
+          total_cost: totalCost,
+          balance: -totalCost,
+          service_ref: service_ref,
+          status: false,
+        },
+      });
 
-    return service;
+      return service;
+    } catch (error) {
+      return error;
+    }
   }
 
   async GetAllServices() {
