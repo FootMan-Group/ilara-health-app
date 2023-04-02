@@ -1,8 +1,9 @@
-import { Injectable, ForbiddenException, Req } from '@nestjs/common';
+import { Injectable, NotFoundException, Req } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Request } from 'express';
-//import { CreateProductDto } from './dto';
+import { Products } from '.prisma/client';
+import { CreateProductDto } from './dto';
 
 @Injectable()
 export class ProductsService {
@@ -20,9 +21,10 @@ export class ProductsService {
     return products;
   }
 
-  async CreateProduct(product: string, status: boolean) {
+  async CreateProduct(dto: CreateProductDto): Promise<Products> {
+    const { product, status, stock_count } = dto;
     const newProduct = await this.prisma.products.create({
-      data: { product: product, status: status },
+      data: { product, status, stock_count },
     });
     return newProduct;
   }
@@ -39,6 +41,36 @@ export class ProductsService {
     const updatedProduct = await this.prisma.products.update({
       where: { id: productId },
       data: { status: true },
+    });
+    return updatedProduct;
+  }
+
+  async IncreaseProductStock(id: number, amount: number): Promise<Products> {
+    const product = await this.prisma.products.findUnique({
+      where: { id },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+
+    const updatedProduct = await this.prisma.products.update({
+      where: { id },
+      data: { stock_count: product.stock_count + amount },
+    });
+
+    return updatedProduct;
+  }
+
+  async ReduceProductStock(id: number, amount: number): Promise<Products> {
+    const product = await this.prisma.products.findUnique({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Product with ID ${id} not found.`);
+    }
+    const updatedStockCount = Math.max(0, product.stock_count - amount);
+    const updatedProduct = await this.prisma.products.update({
+      where: { id },
+      data: { stock_count: updatedStockCount },
     });
     return updatedProduct;
   }

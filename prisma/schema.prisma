@@ -95,6 +95,7 @@ model Products {
   id                Int     @id @default(autoincrement()) @map("id")
   product           String  @map("product")
   status            Boolean @map("status")
+  stock_count       Int     @map("stock_count")
 
   services Services[]
 
@@ -116,4 +117,5 @@ model Services {
 
   @@map("il_services")
 }
+
 

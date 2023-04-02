@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto';
+import { Products } from '.prisma/client';
 
 @Controller('products')
 export class ProductsController {
@@ -18,9 +19,8 @@ export class ProductsController {
   }
 
   @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
-    const { product, status } = createProductDto;
-    return await this.productsService.CreateProduct(product, status);
+  async create(@Body() dto: CreateProductDto) {
+    return await this.productsService.CreateProduct(dto);
   }
 
   @Patch(':id/deactivate')
@@ -31,5 +31,29 @@ export class ProductsController {
   @Patch(':id/activate')
   async activateProduct(@Param('id') id: string) {
     return await this.productsService.ActivateProduct(parseInt(id));
+  }
+
+  @Patch(':id/increase-stock/:amount')
+  async increaseProductStock(
+    @Param('id') id: string,
+    @Param('amount') amount: string,
+  ): Promise<Products> {
+    const updatedProduct = await this.productsService.IncreaseProductStock(
+      Number(id),
+      Number(amount),
+    );
+    return updatedProduct;
+  }
+
+  @Patch(':id/reduce-stock/:amount')
+  async reduceProductStock(
+    @Param('id') id: string,
+    @Param('amount') amount: string,
+  ): Promise<Products> {
+    const updatedProduct = await this.productsService.ReduceProductStock(
+      Number(id),
+      Number(amount),
+    );
+    return updatedProduct;
   }
 }
