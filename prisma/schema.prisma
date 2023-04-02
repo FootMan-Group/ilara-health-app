@@ -57,6 +57,7 @@ model Customers {
   updated_at            DateTime       @updatedAt @map("updated_at")
 
   payments           Transactions[]
+  service            Services[]
 
   @@map("il_customers")
 }
@@ -88,5 +89,31 @@ model Transactions {
   updated_at            DateTime           @updatedAt @map("updated_at")
 
   @@map("il_transactions")
+}
+
+model Products {
+  id                Int     @id @default(autoincrement()) @map("id")
+  product           String  @map("product")
+  status            Boolean @map("status")
+
+  services Services[]
+
+  @@map("il_products")
+}
+
+model Services {
+  id              Int           @id @default(autoincrement()) @map("id")
+  customerID      Customers     @relation(fields: [customer_id], references: [id])
+  customer_id     Int           @map("customer_id")
+  productID       Products      @relation(fields: [product_id], references: [id])
+  product_id      Int           @map("product_id")
+  units           Int           @map("units")
+  total_cost      Int           @map("total_cost")
+  balance         Int           @map("balance")
+  status          Boolean       @map("status")
+  created_at      DateTime      @default(now()) @map("created_at")
+  updated_at      DateTime      @updatedAt @map("updated_at")
+
+  @@map("il_services")
 }
 
