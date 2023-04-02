@@ -22,9 +22,9 @@ export class ProductsService {
   }
 
   async CreateProduct(dto: CreateProductDto): Promise<Products> {
-    const { product, status, stock_count } = dto;
+    const { product, status, stock_count, price } = dto;
     const newProduct = await this.prisma.products.create({
-      data: { product, status, stock_count },
+      data: { product, status, stock_count, price },
     });
     return newProduct;
   }
