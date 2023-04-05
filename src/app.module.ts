@@ -8,7 +8,15 @@ import { ServicesModule } from './services/services.module';
 import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, AuthModule, CustomersModule, ProductsModule, ServicesModule, TransactionsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    AuthModule,
+    CustomersModule,
+    ProductsModule,
+    ServicesModule,
+    TransactionsModule,
+  ],
   controllers: [],
   providers: [],
 })

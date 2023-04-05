@@ -1,6 +1,7 @@
 import {
   UnauthorizedException,
   ForbiddenException,
+  Req,
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -19,6 +20,7 @@ class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
+    private jwtService: JwtService,
   ) {}
 
   //Create Sign up Service for the engineers
@@ -162,21 +164,12 @@ class AuthService {
   ): Promise<{ access: string; refresh: string }> {
     try {
       // Verify the refresh token and extract the user ID
-      console.log(AuthRefreshDto);
-      console.log(
-        jwtoken.verify(
-          AuthRefreshDto.refresh,
-          this.config.get('JWT_REFRESH_SECRET'),
-        ),
-      );
       const decoded: any = jwtoken.verify(
         AuthRefreshDto.refresh,
         this.config.get('JWT_REFRESH_SECRET'),
       );
-      console.log('This is a test');
 
       const userId = decoded.userId;
-      console.log(userId);
 
       // Check if the user exists in the database
       const user = await this.prisma.users.findUnique({
