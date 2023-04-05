@@ -56,13 +56,56 @@ export class TransactionsService {
   }
 
   async GetAllTransactions() {
-    const transactions = await this.prisma.transactions.findMany();
+    const transactions = await this.prisma.transactions.findMany({
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        serviceID: {
+          select: {
+            id: true,
+            service_ref: true,
+            units: true,
+            total_cost: true,
+            balance: true,
+            status: true,
+          },
+        },
+      },
+    });
     return transactions;
   }
 
   async GetTransactionsByCustomerId(customerId: number) {
     const transactions = await this.prisma.transactions.findMany({
       where: { customer_id: customerId },
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        serviceID: {
+          select: {
+            id: true,
+            service_ref: true,
+            units: true,
+            total_cost: true,
+            balance: true,
+            status: true,
+          },
+        },
+      },
     });
     return transactions;
   }
@@ -70,6 +113,27 @@ export class TransactionsService {
   async GetTransactionsByServiceId(serviceId: number) {
     const transactions = await this.prisma.transactions.findMany({
       where: { service_id: serviceId },
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        serviceID: {
+          select: {
+            id: true,
+            service_ref: true,
+            units: true,
+            total_cost: true,
+            balance: true,
+            status: true,
+          },
+        },
+      },
     });
     return transactions;
   }

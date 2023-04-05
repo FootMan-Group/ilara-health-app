@@ -58,13 +58,50 @@ export class ServicesService {
   }
 
   async GetAllServices() {
-    const services = await this.prisma.services.findMany();
+    const services = await this.prisma.services.findMany({
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        productID: {
+          select: {
+            id: true,
+            product: true,
+            status: true,
+          },
+        },
+      },
+    });
     return services;
   }
 
   async GetServicesByStatus(status: boolean) {
     const services = await this.prisma.services.findMany({
       where: { status },
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        productID: {
+          select: {
+            id: true,
+            product: true,
+            status: true,
+          },
+        },
+      },
     });
     return services;
   }
@@ -72,6 +109,24 @@ export class ServicesService {
   async GetServiceByCustomerId(customerId: number) {
     const services = await this.prisma.services.findMany({
       where: { customer_id: customerId },
+      include: {
+        customerID: {
+          select: {
+            id: true,
+            identification_number: true,
+            customer_names: true,
+            msisdn: true,
+            email: true,
+          },
+        },
+        productID: {
+          select: {
+            id: true,
+            product: true,
+            status: true,
+          },
+        },
+      },
     });
     return services;
   }

@@ -1,10 +1,19 @@
-import { Controller, Post, Body, Req, Get, Query, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Get,
+  Query,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { CustomersService } from './customers.service';
 
 import { CustomerRefreshDto, CustomersDto, CustomerSigninDto } from './dto';
 
 import { Request } from 'express';
-
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('customers')
 export class CustomersController {
@@ -49,5 +58,11 @@ export class CustomersController {
   @Post('auth/refresh')
   RefreshToken(@Body() dto: CustomerRefreshDto) {
     return this.customerService.refreshToken(dto);
+  }
+
+  @UseGuards(AuthGuard('CustomerJwt'))
+  @Get('/auth/me')
+  getDetailedMe(@Req() req: Request) {
+    return req['user'];
   }
 }
