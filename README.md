@@ -8,6 +8,8 @@ This is the Ilara health app
 ```bash
 $ npm install
 $ docker-compose up -d dev-db
+$ npx prisma migrate dev
+$ npx prisma deploy
 ```
 
 ## Running the app
